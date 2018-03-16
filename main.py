@@ -1,23 +1,27 @@
 from flask import Flask
 from flask import Flask, flash, redirect, render_template, request, session, abort
 import os
+import sqlite3 as sql
 from sqlalchemy.orm import sessionmaker
 from tabledef import *
 engine = create_engine('sqlite:///tutorial.db', echo=True)
-
 app = Flask(__name__)
 
+SQLALCHEMY_DATABASE_URI ='sqlite:///tutorial.db'
 
-# import sqlite3 as sql
-#
-# def insertUser(username,password):
-#     con = sql.connect("tutorial.db")
-#     cur = con.cursor()
-#     cur.execute("INSERT INTO users (username,password) VALUES (?,?)", (username,password))
-#     con.commit()
-#     con.close()
-#
-# insertUser('per','atom')
+app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
+app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+def insertUser(username,password):
+    con = sql.connect("tutorial.db")
+    cur = con.cursor()
+    cur.execute("INSERT INTO users (username,password) VALUES (?,?)", (username,password))
+    con.commit()
+    con.close()
+
+insertUser('per','atom')
 
 @app.route('/')
 def home():
