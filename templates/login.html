@@ -2,8 +2,11 @@
 {% block body %}
 {% if session['logged_in'] %}
 <p>You're logged in already!</p>
+<h3>Hello Boss!</h3> <a href='/logout'>Logout</a>
 {% else %}
 
+<h3>Hello Man</h3>  <a href='/register'>Register</a>
+<h1>NUMBER OF USERS:  {{number_of_user}}<h1>
 
 <form action="/login" method="POST">
 	<div class="login">
@@ -29,6 +32,8 @@
 		</div>
 	</div>
 </form>
+
+
 
 {% endif %}
 {% endblock %}

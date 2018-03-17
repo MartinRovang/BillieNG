@@ -1,0 +1,22 @@
+
+{% block body %}
+{% if session['logged_in'] %}
+
+<h3>Hello Boss!</h3> <a href='/logout'>Logout</a>
+<h1>SCOREBOARD:</h1>
+
+
+<h2>USERNAME| MONEY</h2>
+<ul>
+{% for name in Playersname %}
+	{% for i in Playersnumb %}
+	<li>{{name}} {{Playersstats[i].money}}</li>
+{% endfor %}
+{% endfor %}
+</ul>
+
+</table>
+
+
+{% endif %}
+{% endblock %}

@@ -4,6 +4,10 @@ import os
 import sqlite3 as sql
 from sqlalchemy.orm import sessionmaker
 from tabledef import *
+from flask_wtf import FlaskForm
+from wtforms import StringField,PasswordField ,validators
+from wtforms.validators import DataRequired
+
 engine = create_engine('sqlite:///tutorial.db', echo=True)
 app = Flask(__name__)
 
@@ -21,21 +25,37 @@ def insertUser(username,password):
     con.commit()
     con.close()
 
-insertUser('per','atom')
+
+
+class MyForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('New Password', [validators.DataRequired(),validators.EqualTo('confirm', message='Passwords must match')    ])
+    confirm = PasswordField('Repeat Password')
+
+Playersstats = []
+Playersname = []
+Playersnumb = []
+class Players:
+    number_of_user = 0
+    def __init__(self,health,armor,dmg,money,id):
+        Players.number_of_user += 1
+        self.health = health
+        self.armor = armor
+        self.dmg = dmg
+        self.money = money
+        self.id = id
 
 @app.route('/')
 def home():
     if not session.get('logged_in'):
-        return render_template('login.html')
+        return render_template('login.html',number_of_user = Players.number_of_user)
     else:
-        return "Hello Boss!  <a href='/logout'>Logout</a>"
-
+        return render_template('Scoreboard.html',number_of_user = Players.number_of_user, Playersstats = Playersstats,Playersname=Playersname,Playersnumb=Playersnumb)
 @app.route('/login', methods=['POST'])
 def do_admin_login():
 
     POST_USERNAME = str(request.form['username'])
     POST_PASSWORD = str(request.form['password'])
-
     Session = sessionmaker(bind=engine)
     s = Session()
     query = s.query(User).filter(User.username.in_([POST_USERNAME]), User.password.in_([POST_PASSWORD]) )
@@ -48,7 +68,24 @@ def do_admin_login():
 
 
 
+@app.route('/register', methods=('GET', 'POST'))
+def register():
+    form = MyForm()
+    if form.validate_on_submit():
+        user = form.username.data
+        password = form.password.data
+        insertUser(user,password)
+        Playersname.append(user)
+        Playersstats.append(Players(100,10,20,10000,Players.number_of_user))
+        Playersnumb.append(Players.number_of_user-1)
+        return "<h3>CONGRATS</h3> <a href='/'>Login</a>"
+    return render_template('register.html', form=form)
 
+# Playersingame.append(Players(100,10,20,10000,Players.number_of_user))
+# print (Playersingame[0].armor)
+@app.route('/Scoreboard')
+def scoreboard():
+    return render_template('Scoreboard.html',number_of_user = Players.number_of_user, Playersstats = Playersstats,Playersname=Playersname,Playersnumb=Playersnumb)
 
 @app.route("/logout")
 def logout():
