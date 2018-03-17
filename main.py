@@ -51,6 +51,8 @@ def home():
         return render_template('login.html',number_of_user = Players.number_of_user)
     else:
         return render_template('Scoreboard.html',number_of_user = Players.number_of_user, Playersstats = Playersstats,Playersname=Playersname,Playersnumb=Playersnumb)
+
+
 @app.route('/login', methods=['POST'])
 def do_admin_login():
 
