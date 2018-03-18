@@ -7,8 +7,7 @@ from tabledef import *
 from flask_wtf import FlaskForm
 from wtforms import StringField,PasswordField ,validators
 from wtforms.validators import DataRequired
-# from apscheduler.schedulers.background import BackgroundScheduler
-
+import time, threading
 
 
 engine = create_engine('sqlite:///tutorial.db', echo=True)
@@ -26,12 +25,18 @@ Playersstats = []
 Playersname = []
 Playersnumb = []
 
+#Ticks
 def tick():
     print("money given")
     i = 0
     while i < len(Playersstats):
         Players.apply_money(Playersstats[i])
         i+=1
+
+#Timer foo
+def foo():
+    tick()
+    threading.Timer(10, foo).start()
 
 
 
@@ -99,6 +104,7 @@ def register():
         Playersname.append(user)
         Playersstats.append(Players(100,10,20,10000,Players.number_of_user))
         Playersnumb.append(Players.number_of_user-1)
+        tick()
         return "<h3>CONGRATS</h3> <a href='/'>Login</a>"
     return render_template('register.html', form=form)
 
@@ -115,16 +121,6 @@ def logout():
     return home()
 
 if __name__ == '__main__':
-
-    # scheduler = BackgroundScheduler(daemonic=True)
-    # scheduler.add_job(tick, 'interval', seconds=2)
-    # scheduler.start()
+    foo()
     app.secret_key = os.urandom(12)
     app.run()
-    # try:
-    #     # This is here to simulate application activity (which keeps the main thread alive).
-    #     while True:
-    #         time.sleep(2)
-    # except (KeyboardInterrupt, SystemExit):
-    #     # Not strictly necessary if daemonic mode is enabled but should be done if possible
-    #     scheduler.shutdown()
