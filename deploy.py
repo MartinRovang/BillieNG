@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import Flask, flash, redirect, render_template, request, session, abort
+import os
 import sqlite3 as sql
 from sqlalchemy.orm import sessionmaker
 from tabledef import *
@@ -7,6 +8,12 @@ from flask_wtf import FlaskForm
 from wtforms import StringField,PasswordField ,validators
 from wtforms.validators import DataRequired
 import time, threading
+from datetime import datetime
+import time
+import os
+from apscheduler.schedulers.background import BackgroundScheduler
+
+
 
 
 engine = create_engine('sqlite:///tutorial.db', echo=True)
@@ -119,7 +126,13 @@ def logout():
     session['logged_in'] = False
     return home()
 
+
+
+
 if __name__ == '__main__':
-    foo()
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(tick, 'interval', seconds=3)
+    scheduler.start()
     app.secret_key = os.urandom(12)
     app.run()
+    # foo()
