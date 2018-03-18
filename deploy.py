@@ -35,10 +35,10 @@ def tick():
         Players.apply_money(Playersstats[i])
         i+=1
 
-#Timer foo
-def foo():
-    tick()
-    threading.Timer(10, foo).start()
+
+# def foo():
+#     tick()
+#     threading.Timer(10, foo).start()
 
 
 
@@ -125,5 +125,8 @@ def logout():
 
 
 if __name__ == '__main__':
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(tick, 'interval', seconds=3)
+    scheduler.start()
     app.secret_key = os.urandom(12)
     app.run()
