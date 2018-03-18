@@ -10,7 +10,7 @@ import time, threading
 from datetime import datetime
 import time
 from apscheduler.schedulers.background import BackgroundScheduler
-import clock
+
 
 
 engine = create_engine('sqlite:///tutorial.db', echo=True)
