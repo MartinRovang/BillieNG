@@ -1,4 +1,3 @@
-from flask import Flask
 from flask import Flask, flash, redirect, render_template, request, session, abort
 import os
 import sqlite3 as sql
@@ -10,14 +9,12 @@ from wtforms.validators import DataRequired
 import time, threading
 from datetime import datetime
 import time
-import os
 from apscheduler.schedulers.background import BackgroundScheduler
 import clock
 
 
 engine = create_engine('sqlite:///tutorial.db', echo=True)
 app = Flask(__name__)
-
 SQLALCHEMY_DATABASE_URI ='sqlite:///tutorial.db'
 
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
@@ -32,8 +29,8 @@ Playersnumb = []
 
 #Ticks
 def tick():
-    print("money given")
     i = 0
+    print("Money given")
     while i < len(Playersstats):
         Players.apply_money(Playersstats[i])
         i+=1
