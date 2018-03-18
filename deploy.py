@@ -38,7 +38,7 @@ def tick():
 
 def foo():
     tick()
-    threading.Timer(10, foo).start()
+    threading.Timer(60, foo).start()
 
 
 
@@ -106,7 +106,8 @@ def register():
         Playersname.append(user)
         Playersstats.append(Players(100,10,20,10000,Players.number_of_user))
         Playersnumb.append(Players.number_of_user-1)
-        foo()
+        if Players.number_of_user < 2
+            foo()
         return "<h3>CONGRATS</h3> <a href='/'>Login</a>"
     return render_template('register.html', form=form)
 
