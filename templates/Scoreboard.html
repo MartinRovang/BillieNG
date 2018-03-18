@@ -6,12 +6,10 @@
 <h1>SCOREBOARD:</h1>
 
 
-<h2>USERNAME| MONEY</h2>
+<h2>USERNAME| MONEY$</h2>
 <ul>
-{% for name in Playersname %}
-	{% for i in Playersnumb %}
-	<li>{{name}} {{Playersstats[i].money}}</li>
-{% endfor %}
+{% for i, j in zip(Playersname, Playersnumb) %}
+	<li> {{i}} {{Playersstats[j].money}}</li>
 {% endfor %}
 </ul>
 

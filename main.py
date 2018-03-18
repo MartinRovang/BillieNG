@@ -7,6 +7,9 @@ from tabledef import *
 from flask_wtf import FlaskForm
 from wtforms import StringField,PasswordField ,validators
 from wtforms.validators import DataRequired
+# from apscheduler.schedulers.background import BackgroundScheduler
+
+
 
 engine = create_engine('sqlite:///tutorial.db', echo=True)
 app = Flask(__name__)
@@ -17,6 +20,21 @@ app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+
+Playersstats = []
+Playersname = []
+Playersnumb = []
+
+def tick():
+    print("money given")
+    i = 0
+    while i < len(Playersstats):
+        Players.apply_money(Playersstats[i])
+        i+=1
+
+
+
 
 def insertUser(username,password):
     con = sql.connect("tutorial.db")
@@ -32,9 +50,7 @@ class MyForm(FlaskForm):
     password = PasswordField('New Password', [validators.DataRequired(),validators.EqualTo('confirm', message='Passwords must match')    ])
     confirm = PasswordField('Repeat Password')
 
-Playersstats = []
-Playersname = []
-Playersnumb = []
+
 class Players:
     number_of_user = 0
     def __init__(self,health,armor,dmg,money,id):
@@ -44,13 +60,15 @@ class Players:
         self.dmg = dmg
         self.money = money
         self.id = id
+    def apply_money(self):
+        self.money = int(self.money + 1000)
 
 @app.route('/')
 def home():
     if not session.get('logged_in'):
         return render_template('login.html',number_of_user = Players.number_of_user)
     else:
-        return render_template('Scoreboard.html',number_of_user = Players.number_of_user, Playersstats = Playersstats,Playersname=Playersname,Playersnumb=Playersnumb)
+        return render_template('Scoreboard.html',number_of_user = Players.number_of_user, Playersstats = Playersstats,Playersname=Playersname,Playersnumb=Playersnumb,zip=zip)
 
 
 @app.route('/login', methods=['POST'])
@@ -70,6 +88,7 @@ def do_admin_login():
 
 
 
+
 @app.route('/register', methods=('GET', 'POST'))
 def register():
     form = MyForm()
@@ -83,17 +102,29 @@ def register():
         return "<h3>CONGRATS</h3> <a href='/'>Login</a>"
     return render_template('register.html', form=form)
 
+
 # Playersingame.append(Players(100,10,20,10000,Players.number_of_user))
 # print (Playersingame[0].armor)
 @app.route('/Scoreboard')
 def scoreboard():
-    return render_template('Scoreboard.html',number_of_user = Players.number_of_user, Playersstats = Playersstats,Playersname=Playersname,Playersnumb=Playersnumb)
+    return render_template('Scoreboard.html',number_of_user = Players.number_of_user, Playersstats = Playersstats,Playersname=Playersname,Playersnumb=Playersnumb,zip=zip)
 
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
     return home()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+
+    # scheduler = BackgroundScheduler(daemonic=True)
+    # scheduler.add_job(tick, 'interval', seconds=2)
+    # scheduler.start()
     app.secret_key = os.urandom(12)
     app.run()
+    # try:
+    #     # This is here to simulate application activity (which keeps the main thread alive).
+    #     while True:
+    #         time.sleep(2)
+    # except (KeyboardInterrupt, SystemExit):
+    #     # Not strictly necessary if daemonic mode is enabled but should be done if possible
+    #     scheduler.shutdown()
