@@ -1,10 +1,6 @@
 # from apscheduler.schedulers.blocking import BlockingScheduler
-# import timer,threading
 # from deploy import tick
 
-# def foo():
-#     tick()
-#     threading.Timer(10, foo).start()
 
 # sched = BlockingScheduler()
 #

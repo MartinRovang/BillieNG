@@ -36,9 +36,9 @@ def tick():
         i+=1
 
 
-# def foo():
-#     tick()
-#     threading.Timer(10, foo).start()
+def foo():
+    tick()
+    threading.Timer(10, foo).start()
 
 
 
@@ -106,6 +106,7 @@ def register():
         Playersname.append(user)
         Playersstats.append(Players(100,10,20,10000,Players.number_of_user))
         Playersnumb.append(Players.number_of_user-1)
+        foo()
         return "<h3>CONGRATS</h3> <a href='/'>Login</a>"
     return render_template('register.html', form=form)
 
@@ -125,8 +126,5 @@ def logout():
 
 
 if __name__ == '__main__':
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(tick, 'interval', seconds=3)
-    scheduler.start()
     app.secret_key = os.urandom(12)
     app.run()
