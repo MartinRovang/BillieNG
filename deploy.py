@@ -1,19 +1,22 @@
 from flask import Flask, flash, redirect, render_template, request, session, abort
 import os
 import sqlite3 as sql
-from sqlalchemy.orm import sessionmaker
 from tabledef import *
 from flask_wtf import FlaskForm
 from wtforms import StringField,PasswordField ,validators
 from wtforms.validators import DataRequired
+
 import time, threading
 from datetime import datetime
 import time
 from apscheduler.schedulers.background import BackgroundScheduler
-
-
-
+from sqlalchemy.orm import sessionmaker
 engine = create_engine('sqlite:///tutorial.db', echo=True)
+
+
+
+
+
 app = Flask(__name__)
 SQLALCHEMY_DATABASE_URI ='sqlite:///tutorial.db'
 
@@ -114,9 +117,9 @@ def register():
 
 # Playersingame.append(Players(100,10,20,10000,Players.number_of_user))
 # print (Playersingame[0].armor)
-@app.route('/Scoreboard')
-def scoreboard():
-    return render_template('Scoreboard.html',number_of_user = Players.number_of_user, Playersstats = Playersstats,Playersname=Playersname,Playersnumb=Playersnumb,zip=zip)
+# @app.route('/Scoreboard')
+# def scoreboard():
+#     return render_template('Scoreboard.html',number_of_user = Players.number_of_user, Playersstats = Playersstats,Playersname=Playersname,Playersnumb=Playersnumb,zip=zip)
 
 @app.route("/logout")
 def logout():
