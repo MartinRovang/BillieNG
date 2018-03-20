@@ -98,7 +98,6 @@ def do_admin_register():
     Username =  str(request.form['uname'])
     Password =  str(request.form['psw'])
     Passwordrep =  str(request.form['psw-repeat'])
-    print(Username)
     if Passwordrep != Password:
         flash('password does not match!')
         return render_template('login.html',number_of_user = Players.number_of_user)
@@ -108,8 +107,13 @@ def do_admin_register():
     Playersnumb.append(Players.number_of_user-1)
     if Players.number_of_user < 2:
         foo()
+    print(Playersname)
     return render_template('login.html',number_of_user = Players.number_of_user)
 
+
+@app.route('/scoreboardoff')
+def scoreboardoff():
+    return render_template('Scoreboardoffic.html',number_of_user = Players.number_of_user, Playersstats = Playersstats,Playersname=Playersname,Playersnumb=Playersnumb,zip=zip)
 
 
 @app.route("/logout")

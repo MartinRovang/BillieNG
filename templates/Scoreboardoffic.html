@@ -1,0 +1,14 @@
+
+
+<a href='/'>Login/register</a>
+
+<h1>SCOREBOARD:</h1>
+
+<h2>USERNAME| MONEY</h2>
+<ul>
+{% for i, j in zip(Playersname, Playersnumb) %}
+	<li> {{i}} {{Playersstats[j].money}}$</li>
+{% endfor %}
+</ul>
+
+</table>
