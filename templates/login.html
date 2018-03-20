@@ -202,7 +202,7 @@ span.psw {
 <body>
 <div class="topbar">
   <button class="button" onclick="document.getElementById('id01').style.display='block'">Login</button>
-	<a href="/register" <button class = "button" >Register </button></a>
+  <button class="button" onclick="document.getElementById('id02').style.display='block'">Register</button>
 
 
 
@@ -223,7 +223,7 @@ span.psw {
       <label class="nl" for="psw"><b>Password</b></label>
       <input class="nl" type="password" placeholder="Enter Password" name="password" required>
 
-      <button class="nl" type="submit">Login</button>
+      <button class="nl" type="submit" href="do_admin_login">Login</button>
     </div>
 
     <div class="container" style="background-color:#f1f1f1">
@@ -237,8 +237,38 @@ span.psw {
 
 <!--Register form-->
 <div class="modal" id="id02">
-  <span onclick="<href='/register'>" class="close" title="Close Modal">&times;</span>
+  <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">&times;</span>
+  <!--Legg in database path her-->
+  <form class="modal-content" method="POST" action="/register" >
+    <div class="container">
+      <h1>Sign Up</h1>s
+      <p>Please fill in this form to create an account.</p>
+      <hr>
+      <label class="nl" for="email"> <b>Email</b> </label>
+      <input class="nl" type="text" placeholder="Enter Email" name="email" vaule="mail-register">
 
+      <label class="nl" for="uname"> <b>Username</b> </label>
+      <input class="nl" type="text" placeholder="Enter Username" name="uname" value="uname-register" required>
+
+      <label class="nl" for="psw"> <b>Password</b> </label>
+      <input class="nl" type="password" placeholder="Enter Password" name="psw" value="password-register" required>
+
+      <label class="nl" for="psw-repeat"> <b>Repeat password</b> </label>
+      <input class="nl" type="password" placeholder="Repeat Password" name="psw-repeat" value="psw-repeat-register" required>
+
+      <label>
+        <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+      </label>
+
+      <p>By creating an account you agree to our <a href="#" style="color:dogerblue">Terms & Privacy</a> </p>
+
+      <div class="clearfix">
+        <button type="submit" class="signup" >Sign Up</button>
+        <button type="button" onclick="document.getElementById('id02').style.display='none'" class="cancelbutton cancelbtn">Cancel</button>
+
+      </div>
+    </div>
+  </form>
 </div>
 
 <div class="sidemenu">

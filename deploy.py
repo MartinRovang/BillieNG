@@ -1,7 +1,7 @@
 from flask import Flask, flash, redirect, render_template, request, session, abort
 import os
 import sqlite3 as sql
-from tabledef import *
+from tabledefstats import *
 from flask_wtf import FlaskForm
 from wtforms import StringField,PasswordField ,validators
 from wtforms.validators import DataRequired
@@ -11,7 +11,9 @@ from datetime import datetime
 import time
 from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import Column, Integer, Unicode, UnicodeText, String
 engine = create_engine('sqlite:///tutorial.db', echo=True)
+
 
 
 
@@ -35,7 +37,7 @@ def tick():
     i = 0
     print("Money given")
     while i < len(Playersstats):
-        Players.apply_money(Playersstats[i])
+        User.apply_money(Playersstats[i])
         i+=1
 
 
@@ -55,11 +57,6 @@ def insertUser(username,password):
 
 
 
-class MyForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('New Password', [validators.DataRequired(),validators.EqualTo('confirm', message='Passwords must match')    ])
-    confirm = PasswordField('Repeat Password')
-
 
 class Players:
     number_of_user = 0
@@ -73,7 +70,7 @@ class Players:
     def apply_money(self):
         self.money = int(self.money + 1000)
 
-@app.route('/')
+@app.route('/', methods=('GET', 'POST'))
 def home():
     if not session.get('logged_in'):
         return render_template('login.html',number_of_user = Players.number_of_user)
@@ -81,9 +78,9 @@ def home():
         return render_template('Scoreboard.html',number_of_user = Players.number_of_user, Playersstats = Playersstats,Playersname=Playersname,Playersnumb=Playersnumb,zip=zip)
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=('GET', 'POST'))
 def do_admin_login():
-
+    print("test1")
     POST_USERNAME = str(request.form['username'])
     POST_PASSWORD = str(request.form['password'])
     Session = sessionmaker(bind=engine)
@@ -96,30 +93,24 @@ def do_admin_login():
         flash('wrong password!')
     return home()
 
-
-
-
 @app.route('/register', methods=('GET', 'POST'))
-def register():
-    form = MyForm()
-    if form.validate_on_submit():
-        user = form.username.data
-        password = form.password.data
-        insertUser(user,password)
-        Playersname.append(user)
-        Playersstats.append(Players(100,10,20,10000,Players.number_of_user))
-        Playersnumb.append(Players.number_of_user-1)
-        if Players.number_of_user < 2:
-            foo()
-        return "<h3>CONGRATS</h3> <a href='/'>Login</a>"
-    return render_template('register.html', form=form)
+def do_admin_register():
+    Username =  str(request.form['uname'])
+    Password =  str(request.form['psw'])
+    Passwordrep =  str(request.form['psw-repeat'])
+    print(Username)
+    if Passwordrep != Password:
+        flash('password does not match!')
+        return render_template('login.html',number_of_user = Players.number_of_user)
+    insertUser(Username,Password)
+    Playersname.append(Username)
+    Playersstats.append(Players(100,10,20,10000,Players.number_of_user))
+    Playersnumb.append(Players.number_of_user-1)
+    if Players.number_of_user < 2:
+        foo()
+    return render_template('login.html',number_of_user = Players.number_of_user)
 
 
-# Playersingame.append(Players(100,10,20,10000,Players.number_of_user))
-# print (Playersingame[0].armor)
-# @app.route('/Scoreboard')
-# def scoreboard():
-#     return render_template('Scoreboard.html',number_of_user = Players.number_of_user, Playersstats = Playersstats,Playersname=Playersname,Playersnumb=Playersnumb,zip=zip)
 
 @app.route("/logout")
 def logout():
